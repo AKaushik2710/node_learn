@@ -1,0 +1,12 @@
+{
+  "name": "dev",
+  "version": "1.0.0",
+  "description": "me as gh",
+  "license": "ISC",
+  "author": "me",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "` echo \"Error is there\"`"
+  }
+}
