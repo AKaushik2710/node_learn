@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { URLSearchParams } = require('url');
 
 function filePath(filename, res){
     return fs.readFile(path.join(__dirname, 'pages', filename), (err, data) => {
@@ -58,9 +59,24 @@ const server =  http.createServer((req,res)=>{
         //     return res.end();
         // }
         if(url === '/contact' && method === 'POST'){
-            res.writeHead(200, {'Content-Type' : 'text/html'});
-            res.write('<h1>Form submitted successfully</h1>');
+            const body = [];
+
+            req.on('data', chunk=>{console.log(chunk); body.push(chunk)});
+            req.on('end', ()=>{
+                const parsedData = Buffer.concat(body).toString();
+                console.log(parsedData);
+
+                const params = new URLSearchParams(parsedData);
+                const bodyOBJ = {};
+
+                for (const [key,value] of params.entries()){
+                    bodyOBJ[key] = value;
+                }
+                console.log(bodyOBJ);
+                res.write('<h1>Thank You for submission</h1>');
             return res.end();
+            });
+            
         }
         else{
             res.writeHead(200, {'Content-Type' : 'text/html'});
