@@ -10,9 +10,4 @@ app.use(express.urlencoded({extended:true}));
 app.use('/', routes);
 app.use('/api', api);
 
-app.listen(4430, ()=> console.log('error'));
-const str = data.map(e => {
-return `Hello Can ${e.id} having tag : ${e.tag}`
-});
-
-console.log(str);
+app.listen(4430);

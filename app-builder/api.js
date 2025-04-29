@@ -16,6 +16,40 @@ router.get('/messages', (req,res)=>{
     res.json(messages);
 })
 
+// 
+router.get('/messages/:messageID', (req,res)=>{
+    console.log(req.params)
+    const {messageID} = req.params;
+
+    const myMessage = messages.find(m=> m.id === Number(messageID));
+    if(!myMessage){
+        res.status(404).send("Page Not Found");
+    }
+    else{
+        res.send(`${myMessage.name}'s to the world is ${myMessage.message}`)
+    }
+})
+
+router.get('/messages/v1/query',(req,res)=>{
+    console.log('Im here')
+    const {search, limit} = req.query;
+
+    let queriedProducts = [...messages];
+
+    if(search){
+        queriedProducts = queriedProducts.filter(q =>{
+            return q.name.startsWith(search);
+        });
+    }
+    if(limit){
+        queriedProducts = queriedProducts.slice(0,Number(limit));
+    }
+    if(!queriedProducts){
+        return res.status(200).send(`<h1>No products found</h1>`);
+    }
+    res.status(200).json(queriedProducts);
+})
+
 router.post('/message', (req, res)=>{
     const {name, message} = req.body;
 
