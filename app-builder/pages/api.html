@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Here is the list of submitted <a href="/api/messages">messages</a></h2>
+    <form action="/api/message" method="POST">
+        <input type="text" name="name" placeholder="Enter name" required>
+        <input type="text" name="message" placeholder="Enter message" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <form action="/api/message" method="PUT">
+        <input type="number" name="id" placeholder="Enter ID" required>
+        <input type="text" name="message" placeholder="Enter message" required>
+        <button type="submit">Update</button>
+    </form>
+
+    <form action="/api/message" method="DELETE">
+        <input type="number" name="name" placeholder="Enter ID" required>
+        <button type="submit">Delete</button>
+    </form>
+</body>
+</html>
