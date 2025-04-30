@@ -7,6 +7,7 @@ const routes = require('./routes');
 const api = require('./api')
 
 app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 app.use('/', routes);
 app.use('/api', api);
 

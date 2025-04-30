@@ -45,7 +45,7 @@ router.get('/messages/v1/query',(req,res)=>{
         queriedProducts = queriedProducts.slice(0,Number(limit));
     }
     if(!queriedProducts){
-        return res.status(200).send(`<h1>No products found</h1>`);
+        return res.status(200).json({"success" : "true", "result" : "Not found"});
     }
     res.status(200).json(queriedProducts);
 })
@@ -60,12 +60,24 @@ router.post('/message', (req, res)=>{
     res.json(messages);
 })
 
-router.put('/message', (req,res)=>{
-    const {id, message} = req.body;
+router.put('/message/postman/:id', (req,res)=>{
+    const {id} = req.params;
+    console.log(req.body);
+    const { message} = req.body;
 
     messages.find(m=> m.id === parseInt(id)).message=message;
 
     res.json(messages);
 })
+
+router.delete('/message/postman/:id',(req,res)=>{
+    const {id} = req.params;
+
+    
+    messages = messages.filter(m => {return m.id !== parseInt(id)});
+
+    res.json(messages);
+})
+
 
 module.exports = router;
