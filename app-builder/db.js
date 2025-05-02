@@ -1,5 +1,4 @@
 const { MongoClient} = require('mongodb');
-// const uri = "mongodb+srv://amankaushiksplaasher:QtMRtl5F1oJoMB1l@learn.fqnoudy.mongodb.net/?retryWrites=true&w=majority&appName=learn";
 require('dotenv').config()
 console.log("Dot is  ",process.env.uri)
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express()
 require('dotenv').config();
-
+const {MongoClient} = require('mongodb');
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 const client = async()=>{
@@ -14,6 +14,20 @@ const client = async()=>{
     }
 }
 
+const mongoClient = new MongoClient(process.env.uri);
+let db, taskCol;
+const mongoConnect = async()=>{
+    try{
+        await mongoClient.connect();
+        db = mongoClient.db("aman");
+        taskCol = db.collection("task");
+    }
+    catch(err){
+        console.error(err)
+    }
+}
+
+mongoConnect();
 client(process.env.uri)
 
 const TaskSchema = new mongoose.Schema({
@@ -27,8 +41,10 @@ app.get('/', (req, res)=>{
 })
 
 app.post('/', async(req, res)=>{
-    const data  = await Task.create(req.body);
-    res.status(201).json({data});
+    const task = req.body;
+    const result = await taskCol.insertOne(task);
+    // const data  = await Task.create(req.body);
+    res.status(201).json({result});
 })
 
 app.listen(3000, ()=>{
