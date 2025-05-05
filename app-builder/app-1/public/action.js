@@ -44,6 +44,7 @@ displayed()
 
 const deleter = async(e)=>{
     try{
+        e.stopPropagation();
     const id = e.target.parentElement.id;
     const data = await axios.delete(`http://localhost:3000/api/${id}`);
     console.log(data);
