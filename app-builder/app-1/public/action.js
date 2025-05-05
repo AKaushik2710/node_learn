@@ -11,6 +11,7 @@ function adder(){
                 name : name.value,
                 task : task.value
             })
+            displayed()
             // console.log(setInfo.data)
         }
         catch(err){
@@ -20,3 +21,14 @@ function adder(){
 }
 
 adder();
+
+const displayed = async()=>{
+    const response = await axios.get('http://localhost:3000/api');
+    // const response = data.json();
+    const data = response.data;
+    display.innerHTML = data.map(d =>{
+        return `<p id=${d._id}>${d.name}</p>`
+    });
+    console.log( data.data);
+
+}
