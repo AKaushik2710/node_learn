@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
-const key = 'mongodb+srv://aman:qwe123@mycluster.ma5iar8.mongodb.net/?retryWrites=true&w=majority&appName=myCluster'
-
+require('dotenv').config();
 app.use(express.urlencoded({extended : true}));
 app.use(express.json())
 
-const connectDB = async ()=>{
+const connectDB = async (param)=>{
+    const key = process.env.URI_FRONT+param+process.env.URI_BACK;
     try{
         await mongoose.connect(key);
         console.log("Connected");
@@ -16,7 +16,7 @@ const connectDB = async ()=>{
     }
 }
 
-connectDB();
+connectDB("test");
 
 const userSchema = new mongoose.Schema({
     name : {
@@ -88,6 +88,16 @@ app.put('/users', async(req, res)=>{
     res.status(200).json(change);
 })
 
+app.get('/users/post/find', async(req,res)=>{
+    try{
+    const {age} = req.body;
+    const getter = await User.find({age : {$lt : age}});
+    res.status(200).json(getter);
+    }
+    catch(err){
+        res.status(400).json(err)
+    }
+})
 app.delete('/users', async (req,res)=>{
     const deleteID = req.body._id;
     const deleted = await User.findByIdAndDelete(deleteID);
