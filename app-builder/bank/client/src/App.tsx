@@ -1,33 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState, createContext } from 'react'
+import {Div} from './Components/Assembler'
+import Login from './pages/Login'
 import './App.css'
+import Dashboard from './pages/Dashboard';
 
+export const AuthContext = createContext<React.Dispatch<React.SetStateAction<boolean>> | null>(null);
 function App() {
-  const [count, setCount] = useState(0)
+  const [login, setLogin] = useState<boolean>(false)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Div cn="h-screen box-border bg-gray-700 md:w-full flex justify-center items-center">
+        { login ? 
+        // <Div>
+        <AuthContext.Provider value={setLogin}>
+            <Login></Login>
+        </AuthContext.Provider>
+        // {/* </Div> */}
+        :
+        <Dashboard />
+        }
+      </Div>
     </>
   )
 }
