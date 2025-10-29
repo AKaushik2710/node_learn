@@ -9,7 +9,8 @@ interface LoginProps{
 export default function Login(){
     const nameRef =  useRef<HTMLInputElement>(null);
     const balanceRef = useRef<HTMLInputElement>(null);
-    const setLogin = useContext(AuthContext); 
+    const myContext = useContext(AuthContext); 
+    const {setLogin, setAccount} = myContext!;
     const [flag, setFlag] = useState<boolean>(false);
     const [log, setLog] = useState<LoginProps>({cn: ["w-35 border hover:text-black hover:bg-white rounded-tl-2xl py-2 border-white focus:bg-teal-500 ", "hover:text-black hover:bg-white w-35 border border-white py-2 rounded-tr-2xl focus:bg-teal-500 "], active: true});
 
@@ -29,7 +30,8 @@ export default function Login(){
             })
             if(data.ok){
                 setLogin!(false);
-                data.json().then((res)=> console.log(res.error));
+                setAccount!(name);
+                // data.json().then((res)=> console.log(res.error));
             }
             else{
                 setFlag(true);
@@ -57,6 +59,7 @@ export default function Login(){
 
             if(data.ok){
                 setLogin!(false);
+                setAccount!(name!);
             }
             // console.log(res.then());
         }
