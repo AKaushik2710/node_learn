@@ -17,7 +17,8 @@ export default function Dashboard(){
     const depositRef = useRef<HTMLInputElement>(null);
     const transferRef = useRef<HTMLInputElement>(null);
     const withdrawRef = useRef<HTMLInputElement>(null);
-    const account = useContext(AccountContext);
+    const act = useContext(AccountContext);
+    const {account, setLogin} = act!;
     useEffect(()=>{
         async function fetchBalance(){
             const data = await fetch('http://localhost:3000/balance', {
@@ -67,7 +68,7 @@ export default function Dashboard(){
                 headers:{
                     'Content-Type' : 'application/json'
                 },
-                method : 'POST',
+                method : 'PUT',
                 body : JSON.stringify({
                     amount : depositRef.current.value ? depositRef.current.value : 0,
                     account : account
@@ -81,26 +82,31 @@ export default function Dashboard(){
 
     async function handleTransfer(){
         console.log(account);
-        const data = await fetch('http://localhost:3000/transfer', {
-            headers : {
-                'Content-Type' : 'application/json'
-            },
-            method : 'POST',
-            body : JSON.stringify({
-                to : transferRef.current!.value,
-                from : account,
-                amount : depositRef.current!.value
-            })
-        });
-
-        if(data.ok){
+        console.log(depositRef.current!.value, balance);
+        if(parseFloat(depositRef.current!.value)<=balance){
+            const data = await fetch('http://localhost:3000/transfer', {
+                headers : {
+                    'Content-Type' : 'application/json'
+                },
+                method : 'PUT',
+                body : JSON.stringify({
+                    to : transferRef.current!.value,
+                    from : account,
+                    amount : depositRef.current!.value
+                })
+            });
+            if(data.ok){
             console.log("Transfer Successful");
             setOption(prev =>{
             return {...prev, options : {option : true, optionDisplay : {...prev.options.optionDisplay, transfer : false}}};
-        });
+            });
+            }
+            else{
+                prompt("Transfer Failed!! Enter a valid account");
+            }
         }
         else{
-            prompt("Transfer Failed!! Enter a valid account");
+            alert("Insufficient Balance");
         }
     }
 
@@ -109,7 +115,7 @@ export default function Dashboard(){
             headers : {
                 'Content-Type' : 'application/json'
             },
-            method : 'POST',
+            method : 'PUT',
             body : JSON.stringify({
                 account : account,
                 amount : withdrawRef.current?.value
@@ -125,8 +131,13 @@ export default function Dashboard(){
             alert("Withdrawal Failed!! Insufficient Balance");
         }
     }
+
+    function handleLogout(){
+        setLogin(true);
+    }
     return <>
-    <Div cn="size-5/6 bg-black flex ">
+    <Div cn="size-5/6 bg-black flex relative">
+        <Button cn='text-red-700 absolute top-2 right-6 text-xl cursor-pointer' onClick={handleLogout}>&#x23FB;</Button>
         <Div cn='flex flex-col justify-center items-center h-full w-2/5'>
             <figure className='size-3/4'>
                 <img src={rct} alt="Vite Logo" className='h-3/4 w-full'></img>
@@ -144,7 +155,7 @@ export default function Dashboard(){
         <Div cn="flex flex-col h-full w-3/5 items-center justify-center gap-10">
             {option.options.optionDisplay.deposit 
             &&
-            <Div cn='w-full border h-2/3 border-red-500 flex flex-col justify-center items-center'>
+            <Div cn='w-full h-2/3 flex flex-col justify-center items-center'>
                 <Label for='deposit' cn='text-xl text-teal-500 self-start ml-10 my-4' text='Deposit'></Label>
                 <Input placeholder='Enter deposit amount...' ref={depositRef} cn='text-cyan-500 p-2 accent-red-600 mb-6 text-xl' type='number' name='deposit'></Input>
                 <Button cn="w-20 h-10 mb-4 rounded-md bg-white cursor-pointer hover:bg-teal-500 hover:text-white" onClick={handleDeposit}>Deposit</Button>
@@ -162,7 +173,7 @@ export default function Dashboard(){
             }
             {option.options.optionDisplay.withdraw 
             &&
-            <Div cn='w-full border h-2/3 border-red-500 flex flex-col justify-center items-center'>
+            <Div cn='w-full h-2/3  flex flex-col justify-center items-center'>
                 <Label for='withdraw' cn='text-xl text-teal-500 self-start ml-10 my-4' text='Withdraw'></Label>
                 <Input placeholder='Enter withdrawal amount...' ref={withdrawRef} cn='text-cyan-500 p-2 accent-red-600 mb-6 text-xl' type='number' name='withdraw'></Input>
                 <Button cn="w-20 h-10 mb-4 rounded-md bg-white cursor-pointer hover:bg-teal-500 hover:text-white" onClick={handleWithdraw}>Withdraw</Button>

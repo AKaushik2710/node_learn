@@ -48,20 +48,20 @@ app.post('/register', async(req, res)=>{
         }
     })
 })
-app.post('/deposit', async(req, res)=>{
+app.put('/deposit', async(req, res)=>{
     const {amount, account} = req.body;
     const q = 'UPDATE BANK SET balance = balance + ? WHERE name = ?';
     const parseAmount = parseFloat(amount);
     db.query(q, [parseAmount, account], (err, data)=>{
         if(err){
-            console.log(err.cause);
+            console.log(err);
             res.status(400).json({error : 'Deposit failed'});
         }
         res.status(200).json(data);
     })
 });
 
-app.post('/withdraw', async(req, res)=>{
+app.put('/withdraw', async(req, res)=>{
     const {amount, account} = req.body;
     console.log(amount, account);
     const q = 'UPDATE BANK SET balance = balance - ? WHERE name = ?';
@@ -75,7 +75,7 @@ app.post('/withdraw', async(req, res)=>{
     })
 });
 
-app.post('/transfer', async(req, res)=>{
+app.put('/transfer', async(req, res)=>{
     const {to, amount, from} = req.body;
     const q1 = 'UPDATE BANK SET balance = balance - ? WHERE name = ?';
     const q2 = 'UPDATE BANK SET balance = balance + ? WHERE name = ?';
@@ -101,7 +101,7 @@ app.post('/transfer', async(req, res)=>{
 
         db.query(q2, [parseAmount, to], (err, data)=>{
             if(err){
-                console.log(err.cause);
+                console.log(err, "ran");
             }
         })
 
