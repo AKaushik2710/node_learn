@@ -9,7 +9,7 @@ export interface AuthContextType{
   setAccount : React.Dispatch<React.SetStateAction<string | null>>
 }
 export const AuthContext = createContext<AuthContextType | null>(null);
-export const AccountContext = createContext<string | null>(null);
+export const AccountContext = createContext<{account : string | null, setLogin : React.Dispatch<React.SetStateAction<boolean>>} | null>(null);
 function App() {
   const [login, setLogin] = useState<boolean>(true);
   const [account, setAccount] = useState<string | null>(null);
@@ -23,7 +23,7 @@ function App() {
         </AuthContext.Provider>
         // {/* </Div> */}
         :
-        <AccountContext.Provider value={account}>
+        <AccountContext.Provider value={{setLogin, account}}>
                   <Dashboard />
         </AccountContext.Provider>
         }
